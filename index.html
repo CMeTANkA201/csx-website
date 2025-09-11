@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>CSX — Скачать приватный сервер</title>
+  <meta name="description" content="Сайт скачивания приватного сервера CSX. Официальный сайт." />
+  <!-- Display fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Russo+One&family=Archivo+Black&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0b0f14; --ink:#e9f1ff; --stroke:#bfe1ff55; --accent:#5aa9ff;
+      --glass: radial-gradient(120% 180% at 30% 10%, #ffffff12 0%, #ffffff07 60%, #ffffff0a 100%);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{ margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial; background: radial-gradient(1200px 800px at 70% 10%, #0f1a28 0%, var(--bg) 40%) fixed; color:var(--ink); overflow-x:hidden; }
+
+    /* ======= Canvas shards background ======= */
+    #shards{ position:fixed; inset:0; z-index:-1; display:block; width:100%; height:100%; }
+
+    /* ======= NAVBAR ======= */
+    .nav{ position:sticky; top:0; z-index:50; display:flex; align-items:center; justify-content:center; gap:12px; padding:16px; backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%); background: linear-gradient( to bottom, #0b0f1411, #0b0f1400 ); }
+    .nav-inner{ display:flex; gap:12px; padding:8px; border-radius:18px; background:#ffffff08; border:1px solid #ffffff12; }
+    .chip{ position:relative; display:inline-flex; align-items:center; gap:10px; cursor:pointer; padding:10px 16px; border-radius:9999px; text-decoration:none; color:var(--ink); background: radial-gradient(120% 180% at 30% 10%, #ffffff10 0%, #ffffff05 60%, #ffffff08 100%); border:1.5px solid var(--stroke); box-shadow: inset 0 0 0.5px #ffffff99, 0 6px 18px #00000055, 0 1px 0 #ffffff0f; transition: transform .15s ease, box-shadow .15s ease, background .2s ease; backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%); }
+    .chip:hover{ transform: translateY(-1px) scale(1.02); box-shadow: inset 0 0 0.6px #ffffffaa, 0 10px 28px #00000066; }
+    .chip:active{ transform: translateY(0) scale(0.99); }
+    .chip .dot{ width:8px; height:8px; border-radius:999px; background: radial-gradient(circle at 30% 30%, var(--accent), #2f89ff); box-shadow: 0 0 10px var(--accent); }
+    .chip .tglogo{ width:18px; height:18px; display:inline-block; }
+
+    /* ======= HERO ======= */
+    .hero{ position:relative; min-height:calc(100svh - 80px); display:grid; place-items:center; padding:48px 16px 56px; }
+    .hero-wrap{ perspective:900px; perspective-origin:50% 30%; }
+    .title3d{ position:relative; font-family:'Archivo Black','Anton','Russo One', system-ui, sans-serif; font-weight:900; font-size:clamp(60px, 14vw, 230px); letter-spacing:0em; line-height:0.85; text-transform:uppercase; text-shadow: 0 3px 0 #1f2d44, 0 18px 40px #000a; transform-style:preserve-3d; will-change:transform, filter; filter: drop-shadow(0 30px 60px #0008); transform-origin:center center; }
+    .title3d .stroke { position:absolute; inset:0; color:transparent; -webkit-text-stroke: 22px #88c4ff22; z-index:-1; filter: blur(4px); transform: translateZ(-30px) scale(1.02); backface-visibility:hidden; }
+    .title3d .fill{ background: linear-gradient(180deg, #f5fbff 0%, #cfe3ff 35%, #a4ccff 60%, #eaf4ff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; position:relative; display:inline-block; backface-visibility:hidden; }
+
+    .hero-cta{ margin-top:26px; display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .btn{ position:relative; display:inline-flex; align-items:center; gap:12px; padding:16px 26px; border-radius:18px; font-weight:700; font-size:18px; color:#08121c; text-decoration:none; cursor:pointer; user-select:none; background: linear-gradient(180deg, #b6e1ff, #6fb6ff); border:1.5px solid #ffffffa5; box-shadow: 0 10px 30px #2a8cff55, inset 0 0 6px #ffffffaa; transform: translateZ(0); transition: transform .15s ease, box-shadow .2s ease; }
+    .btn:hover{ transform: translateY(-2px) scale(1.02); box-shadow: 0 18px 42px #2a8cff80, inset 0 0 6px #ffffffcc; }
+    .btn:active{ transform: translateY(0) scale(0.99); }
+    .btn .arrow{ width:16px; height:16px; border:2px solid currentColor; border-left:none; border-top:none; transform: rotate(-45deg); }
+
+    /* ======= SECTIONS & CARDS ======= */
+    section{ padding:64px 16px; }
+    .container{ max-width:1100px; margin:0 auto; }
+    .card{ background: var(--glass); border:1.5px solid var(--stroke); border-radius:20px; padding:22px; box-shadow: inset 0 0 0.5px #ffffffaa, 0 12px 30px #00000066; backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%); }
+    .grid{ display:grid; gap:16px; grid-template-columns: repeat( auto-fit, minmax(260px, 1fr) ); }
+    h2{ margin:0 0 14px; font-size:28px; letter-spacing:0em; }
+    p{ margin:0 10px 10px 0; opacity:0.85; }
+
+    /* ======= GALLERY (glass cards) ======= */
+    .gallery-grid{ display:grid; gap:18px; grid-template-columns: repeat( auto-fit, minmax(280px, 1fr) ); }
+    .gcard{ position:relative; border-radius:22px; border:1.5px solid var(--stroke); background: var(--glass); overflow:hidden; box-shadow: inset 0 0 0.5px #ffffffaa, 0 14px 36px #00000066; backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%); transform: translateZ(0); transition: transform .2s ease, box-shadow .2s ease; cursor: zoom-in; }
+    .gcard:hover{ transform: translateY(-4px); box-shadow: inset 0 0 0.5px #ffffffaa, 0 24px 54px #00000088; }
+    .gimg{ display:block; width:100%; aspect-ratio:16/9; object-fit:cover; filter:saturate(105%) contrast(102%); }
+    .gcap{ position:absolute; left:12px; bottom:12px; right:12px; font-size:14px; padding:8px 10px; border-radius:14px; background:#0b1420a6; border:1px solid #ffffff2a; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+
+    /* lightbox viewer */
+    .viewer{ position:fixed; inset:0; display:none; place-items:center; background:rgba(5,8,13,.84); z-index:60; }
+    .viewer.show{ display:grid; }
+    .viewer img{ max-width:min(92vw,1400px); max-height:86vh; border-radius:18px; box-shadow:0 20px 60px #000c; border:1px solid #ffffff2a; }
+    .viewer .close{ position:absolute; top:18px; right:18px; width:44px; height:44px; border-radius:999px; border:1px solid #ffffff33; background:#ffffff11; color:#fff; font-size:22px; display:grid; place-items:center; cursor:pointer; }
+
+    /* ======= Footer ======= */
+    footer{ padding:30px 16px 50px; text-align:center; opacity:0.85; font-size:13px; }
+
+    .hide-on-mobile{ display:inline; }
+    @media (max-width:560px){ .hide-on-mobile{ display:none; } }
+  </style>
+</head>
+<body>
+  <canvas id="shards"></canvas>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="chip" href="#home" title="Главная"><span class="dot"></span><span>Главная</span></a>
+      <a class="chip" href="#download" title="Скачать CSX"><span class="dot"></span><span>Скачать CSX</span></a>
+      <a class="chip" id="go-tg" href="https://t.me/Standoff_CSX" target="_blank" rel="noopener" title="Перейти в Telegram разработчика">
+        <svg class="tglogo" viewBox="0 0 24 24" aria-hidden="true">
+          <defs><linearGradient id="tgGrad" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#9fd3ff"/><stop offset="100%" stop-color="#57b0ff"/></linearGradient></defs>
+          <circle cx="12" cy="12" r="11" fill="url(#tgGrad)" opacity="0.65"/>
+          <path d="M20.3 6.2c.3-.9-.6-1.3-1.3-1L4.2 11.2c-.9.3-.8 1.1-.1 1.3l3.8 1.2 1.5 4.7c.2.6.5.8 1 .8.4 0 .6-.2.9-.5l2.1-2 4.4 3.2c.8.4 1.3.2 1.5-.7l1.0-12.0zM8.9 12.9l8.0-5.0-6.0 6.6-.3 3.2-1.7-4.8z" fill="#fff" opacity="0.95"/>
+        </svg>
+        <span>Telegram разработчика</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero" id="home">
+    <div class="hero-wrap">
+      <div class="title3d" id="title3d" aria-label="CSX">
+        <span class="fill">CSX</span>
+        <span class="stroke">CSX</span>
+      </div>
+      <div class="hero-cta">
+        <button class="btn" id="downloadBtn" title="Открыть Telegram‑бота для скачивания">Скачать CSX <span class="arrow"></span></button>
+      </div>
+    </div>
+  </header>
+
+  <!-- DOWNLOAD SECTION -->
+  <section id="download">
+    <div class="container grid">
+      <article class="card">
+        <h2>Скачать через Telegram‑бота</h2>
+        <p>Нажми кнопку — бот <strong>@CSX_Private_bot</strong> откроется в новом окне.</p>
+        <p style="margin-top:10px"><button class="btn" id="downloadBtn2">Открыть бота</button></p>
+      </article>
+      <article class="card">
+        <h2>Telegram канал разработчика</h2>
+        <p>Новости и релизы в канале <strong>@Standoff_CSX</strong>.</p>
+        <p style="margin-top:10px"><a class="btn" href="https://t.me/Standoff_CSX" target="_blank" rel="noopener">Открыть канал</a></p>
+      </article>
+    </div>
+  </section>
+
+  <!-- GALLERY SECTION (glass cards) -->
+  $1
+    <div class="container">
+      <h2>Скриншоты</h2>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  $2
+
+  <!-- ABOUT SECTION -->
+  <section>
+    <div class="container grid">
+      $1
+        <p><strong>CSX — официальный сайт</strong> для скачивания приватного сервера.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer>
+    © <span id="year"></span> CSX — Официальный сайт.
+  </footer>
+
+  <!-- Viewer (lightbox) -->
+  <div class="viewer" id="viewer" aria-hidden="true">
+    <img id="viewerImg" alt="Скриншот CSX"/>
+    <button class="close" id="viewerClose" title="Закрыть">✕</button>
+  </div>
+
+  <script>
+  // ===== Links =====
+  const BOT_URL = 'https://t.me/CSX_Private_bot';
+  document.getElementById('downloadBtn').addEventListener('click', () => window.open(BOT_URL, '_blank'));
+  document.getElementById('downloadBtn2').addEventListener('click', () => window.open(BOT_URL, '_blank'));
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ===== Hero title: intro spin (ends facing forward), then subtle cursor influence =====
+  (function(){
+    const el = document.getElementById('title3d');
+    let tiltX = 0, tiltY = 0;      // actual
+    let tX = 0, tY = 0;            // targets from cursor
+    const AMPL_X = 8.0; const AMPL_Y = 12.0; const EASE = 0.12; // very soft
+
+    // Intro spin config — ends at 720° (same orientation as start)
+    const tStart = performance.now();
+    const INTRO_HOLD = 200; const INTRO_DUR  = 5200; const TOTAL_SPIN = 720;
+
+    function onMove(e){
+      const w = innerWidth, h = innerHeight;
+      const x = (e.clientX ?? (e.touches&&e.touches[0].clientX) ?? w/2);
+      const y = (e.clientY ?? (e.touches&&e.touches[0].clientY) ?? h/2);
+      const nx = (x / w) * 2 - 1;  const ny = (y / h) * 2 - 1;
+      tX = -ny * AMPL_X; tY = nx * AMPL_Y;
+    }
+    addEventListener('mousemove', onMove, {passive:true});
+    addEventListener('touchmove', onMove, {passive:true});
+
+    function easeOutCubic(u){ return 1 - Math.pow(1 - u, 3); }
+
+    function loop(now){
+      tiltX += (tX - tiltX) * EASE;
+      tiltY += (tY - tiltY) * EASE;
+      const dt = now - tStart - INTRO_HOLD; let baseY = 0;
+      if(dt > 0){ const p = Math.min(1, dt / INTRO_DUR); baseY = TOTAL_SPIN * easeOutCubic(p); }
+      el.style.transform = `rotateX(${tiltX.toFixed(2)}deg) rotateY(${(baseY + tiltY).toFixed(2)}deg)`;
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+
+  // ===== Glass shards: assemble -> explode -> hang + reflections (optimized, smooth) =====
+  (function(){
+    const canvas = document.getElementById('shards');
+    const ctx = canvas.getContext('2d');
+    let W, H, DPR = Math.min(1.5, window.devicePixelRatio || 1); // сниженный DPR для FPS
+
+    function resize(){
+      W = canvas.width  = Math.floor(innerWidth * DPR);
+      H = canvas.height = Math.floor(innerHeight * DPR);
+      canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px';
+      initShards();
+      reflectionsAssigned = false; // reassign after resize
+    }
+    window.addEventListener('resize', resize);
+
+    // Lightweight folder image gathering (uses optional manifest.json; otherwise tries a few common names 1..24)
+    async function loadManifest(folder){
+      try{ const r = await fetch(`${folder}/manifest.json`, {cache:'no-store'}); if(!r.ok) return null; return await r.json(); }catch{ return null; }
+    }
+    function tryLoad(src){ return new Promise(res=>{ const im=new Image(); im.decoding='async'; im.onload=()=>res(im); im.onerror=()=>res(null); im.src=src; }); }
+    async function gatherImages(folder){
+      const man = await loadManifest(folder); let cands=[];
+      if(Array.isArray(man) && man.length){ cands = man.map(n=>`${folder}/${n}`); }
+      else{
+        const max=24, patterns=['{i}','img-{i}','csx-{i}','screenshot-{i}','glass-{i}'], exts=['jpg','jpeg','png','webp'];
+        for(let i=1;i<=max;i++){ for(const p of patterns){ for(const e of exts){ cands.push(`${folder}/${p.replace('{i}', i)}.${e}`); } } }
+      }
+      const uniq=[...new Set(cands)];
+      const list = await Promise.all(uniq.map(tryLoad));
+      return list.filter(Boolean);
+    }
+
+    // shards state
+    const SHARDS = [];
+    const COUNT = 180; // немного меньше ради стабильных 60fps
+    let reflectionsAssigned = false;
+
+    // mouse smoothing
+    const mouse = { tx:0.5, ty:0.5, x:0.5, y:0.5 };
+    function onMove(e){
+      const x = (e.clientX ?? (e.touches&&e.touches[0].clientX) ?? innerWidth/2) / innerWidth;
+      const y = (e.clientY ?? (e.touches&&e.touches[0].clientY) ?? innerHeight/2) / innerHeight;
+      mouse.tx = x; mouse.ty = y;
+    }
+    addEventListener('mousemove', onMove, {passive:true});
+    addEventListener('touchmove', onMove, {passive:true});
+
+    // timings for assemble -> explode -> settle
+    let t0 = performance.now(); const HOLD = 320; const BURST = 1200;
+    function easeOutCubic(u){ return 1 - Math.pow(1 - u, 3); }
+
+    function mkPoly(w,h){
+      return [
+        [-w*0.52, -h*1.00],
+        [ w*0.66, -h*0.18],
+        [-w*0.28,  h*0.86],
+      ];
+    }
+
+    function initShards(){
+      SHARDS.length = 0; const cx = W/2, cy = H/2;
+      for(let i=0;i<COUNT;i++){
+        const d = Math.random()*1.2 + 0.2; // глубина 0.2..1.4
+        const s  = (Math.random()*16 + 6) * d; // базовый размер
+        const w  = s * 1.2;
+        const h  = s * (0.78 + Math.random()*0.12);
+        SHARDS.push({
+          x: cx + (Math.random()-0.5)*18*DPR,
+          y: cy + (Math.random()-0.5)*10*DPR,
+          homeX: Math.random()*W,
+          homeY: Math.random()*H,
+          r: Math.random()*Math.PI*2,
+          vr: (Math.random()-0.5)*0.0010,
+          w, h, d,
+          a: 0.55 + Math.random()*0.25,
+          poly: mkPoly(w,h),
+          // reflection params
+          img:null, refScale:1, refAlpha:0.24, flip:Math.random()<0.6, refUX:(Math.random()-0.5)*0.45, refUY:(Math.random()-0.5)*0.45
+        });
+      }
+      t0 = performance.now();
+    }
+
+    function pathPoly(poly){ ctx.beginPath(); ctx.moveTo(poly[0][0], poly[0][1]); for(let i=1;i<poly.length;i++){ ctx.lineTo(poly[i][0], poly[i][1]); } ctx.closePath(); }
+
+    function drawShard(s){
+      ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.r);
+
+      // reflection only on select shards (very few)
+      if(s.img){
+        pathPoly(s.poly);
+        ctx.save(); ctx.clip();
+        ctx.globalAlpha = s.refAlpha; // невысокая яркость для реализма
+        if(s.flip){ ctx.scale(-1,1); }
+        const iw = s.img.width, ih = s.img.height;
+        const scale = Math.max((s.w*1.6)/iw, (s.h*1.6)/ih) * s.refScale;
+        const dw = iw*scale, dh = ih*scale;
+        let dx = -s.w*0.5 + s.refUX*s.w; let dy = -s.h + s.refUY*s.h;
+        if(s.flip){ dx = -dx - dw; }
+        const par = 6 * (1.4 - s.d);
+        dx += (mouse.x - 0.5) * par; dy += (mouse.y - 0.5) * par;
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.drawImage(s.img, dx, dy, dw, dh);
+        ctx.restore();
+      }
+
+      // glass fill & stroke
+      const grad = ctx.createLinearGradient(-s.w, -s.h, s.w, s.h);
+      grad.addColorStop(0, `rgba(215,240,255,${0.12 + 0.10*s.d})`);
+      grad.addColorStop(0.5, `rgba(140,190,255,${0.07 + 0.08*s.d})`);
+      grad.addColorStop(1, `rgba(255,255,255,${0.18 + 0.10*s.d})`);
+      pathPoly(s.poly);
+      ctx.globalAlpha = s.a; ctx.fillStyle = grad; ctx.fill();
+      ctx.lineWidth = 1 * DPR; ctx.strokeStyle = `rgba(180,220,255,${0.34 + 0.18*s.d})`; ctx.stroke();
+      ctx.globalAlpha = 0.22 + 0.12*s.d; ctx.beginPath(); ctx.moveTo(-s.w*0.28, -s.h*0.7); ctx.lineTo(s.w*0.18, -s.h*0.25); ctx.stroke();
+      ctx.restore();
+    }
+
+    async function assignReflections(){
+      if(reflectionsAssigned) return;
+      const imgs = await gatherImages('./glass');
+      if(!imgs.length) { reflectionsAssigned = true; return; }
+      // выбрать несколько КРУПНЫХ осколков
+      const bySize = SHARDS.map((s,i)=>({i, area:s.w*s.h})).sort((a,b)=>b.area-a.area);
+      const N = Math.min(8, Math.floor(SHARDS.length*0.05));
+      for(let k=0;k<N;k++){
+        const idx = bySize[k%bySize.length].i;
+        const s = SHARDS[idx];
+        s.img = imgs[k % imgs.length];
+        s.refScale = 0.85 + Math.random()*0.6;
+        s.refAlpha = 0.22 + Math.random()*0.18; // 0.22..0.40
+        s.flip = Math.random() < 0.5;
+        s.refUX = (Math.random()-0.5)*0.35; s.refUY = (Math.random()-0.5)*0.35;
+      }
+      reflectionsAssigned = true;
+    }
+
+    function loop(now){
+      // мягкий, но отзывчивый курсор
+      mouse.x += (mouse.tx - mouse.x)*0.14; mouse.y += (mouse.ty - mouse.y)*0.14;
+      assignReflections();
+
+      ctx.clearRect(0,0,W,H);
+      const g = ctx.createRadialGradient(W*0.8,H*0.15, 20,  W*0.8,H*0.15, Math.max(W,H));
+      g.addColorStop(0, 'rgba(60,110,190,0.20)'); g.addColorStop(1, 'rgba(10,15,22,0.0)'); ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
+      const elapsed = now - t0;
+      for(const s of SHARDS){
+        if(elapsed <= HOLD){ s.r += s.vr * 0.15; }
+        else if(elapsed <= HOLD + BURST){ const p = (1 - Math.pow(1 - (elapsed - HOLD)/BURST, 3)); s.x = (W/2) + (s.homeX - W/2) * p; s.y = (H/2) + (s.homeY - H/2) * p; s.r += s.vr * 0.5; }
+        else { const parX = (mouse.x - 0.5) * 40 * (1.4 - s.d); const parY = (mouse.y - 0.5) * 40 * (1.4 - s.d); const tx = s.homeX + parX; const ty = s.homeY + parY; s.x += (tx - s.x) * 0.12; s.y += (ty - s.y) * 0.12; s.r += s.vr * 0.4; }
+        drawShard(s);
+      }
+      requestAnimationFrame(loop);
+    }
+
+    // boot
+    resize(); requestAnimationFrame(loop);
+  })();
+
+  // ===== Dynamic gallery & folder scanners (img + glass) =====
+  (function(){
+    const grid = document.getElementById('galleryGrid');
+    if(!grid) return;
+
+    async function loadManifest(folder){
+      try{ const r = await fetch(`${folder}/manifest.json`, {cache:'no-store'}); if(!r.ok) return null; return await r.json(); }catch{ return null; }
+    }
+    function tryLoad(src){ return new Promise(res=>{ const im=new Image(); im.decoding='async'; im.onload=()=>res(src); im.onerror=()=>res(null); im.src=src; }); }
+
+    async function gather(folder){
+      const man = await loadManifest(folder); let cands=[];
+      if(Array.isArray(man) && man.length){ cands = man.map(n=>`${folder}/${n}`); }
+      else{
+        const max=60, patterns=['{i}','img-{i}','csx-{i}','screenshot-{i}','glass-{i}'], exts=['jpg','jpeg','png','webp'];
+        for(let i=1;i<=max;i++){ for(const p of patterns){ for(const e of exts){ cands.push(`${folder}/${p.replace('{i}', i)}.${e}`); } } }
+      }
+      const uniq=[...new Set(cands)];
+      const results = await Promise.all(uniq.map(tryLoad));
+      return results.filter(Boolean);
+    }
+
+    function nameFromPath(p){ const n=p.split('/').pop(); return n.replace(/\.(jpg|jpeg|png|webp)$/i,''); }
+
+    async function populate(){
+      const a = await gather('./img');
+      const b = await gather('./glass');
+      const seen = new Set(); const all=[...a,...b].filter(x=>{ if(seen.has(x)) return false; seen.add(x); return true; });
+      if(!all.length){ grid.innerHTML = '<p style="opacity:.75">Нет скриншотов. Добавь изображения в папки <code>img/</code> или <code>glass/</code>.</p>'; return; }
+      grid.innerHTML = all.map(src=>`<figure class="gcard"><img class="gimg" loading="lazy" alt="${nameFromPath(src)}" src="${src}"><figcaption class="gcap">${nameFromPath(src)}</figcaption></figure>`).join('');
+      setupViewer();
+    }
+
+    function setupViewer(){
+      const viewer = document.getElementById('viewer');
+      const vImg   = document.getElementById('viewerImg');
+      const close  = document.getElementById('viewerClose');
+      document.querySelectorAll('.gcard .gimg').forEach(img=>{
+        img.addEventListener('click', ()=>{ vImg.src = img.src; viewer.classList.add('show'); viewer.setAttribute('aria-hidden','false'); });
+      });
+      function hide(){ viewer.classList.remove('show'); viewer.setAttribute('aria-hidden','true'); vImg.src=''; }
+      close.addEventListener('click', hide);
+      viewer.addEventListener('click', (e)=>{ if(e.target===viewer) hide(); });
+      addEventListener('keydown', e=>{ if(e.key==='Escape') hide(); });
+    }
+
+    populate();
+  })();
+
+  // ===== Lightbox viewer =====
+  (function(){
+    const viewer = document.getElementById('viewer');
+    const vImg   = document.getElementById('viewerImg');
+    const close  = document.getElementById('viewerClose');
+    document.querySelectorAll('.gcard .gimg').forEach(img=>{
+      img.addEventListener('click', ()=>{ vImg.src = img.src; viewer.classList.add('show'); viewer.setAttribute('aria-hidden','false'); });
+    });
+    function hide(){ viewer.classList.remove('show'); viewer.setAttribute('aria-hidden','true'); vImg.src=''; }
+    close.addEventListener('click', hide);
+    viewer.addEventListener('click', (e)=>{ if(e.target===viewer) hide(); });
+    addEventListener('keydown', e=>{ if(e.key==='Escape') hide(); });
+  })();
+
+  // Smooth scroll for internal links
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href');
+      if(id.length>1){ e.preventDefault(); document.querySelector(id)?.scrollIntoView({behavior:'smooth'}); }
+    })
+  })
+  </script>
+</body>
+</html>
