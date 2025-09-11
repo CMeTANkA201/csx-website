@@ -8,7 +8,7 @@
   <!-- Display fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Russo+One&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Russo+One&family=Archivo+Black&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#0b0f14; --ink:#e9f1ff; --stroke:#bfe1ff55; --accent:#5aa9ff;
@@ -33,8 +33,8 @@
     /* ======= HERO ======= */
     .hero{ position:relative; min-height:calc(100svh - 80px); display:grid; place-items:center; padding:48px 16px 56px; }
     .hero-wrap{ perspective:900px; perspective-origin:50% 30%; }
-    .title3d{ position:relative; font-family:'Anton','Russo One', system-ui, sans-serif; font-weight:400; font-size:clamp(60px, 14vw, 230px); letter-spacing:0.02em; line-height:0.85; text-transform:uppercase; text-shadow: 0 3px 0 #1f2d44, 0 18px 40px #000a; transform-style:preserve-3d; will-change:transform, filter; filter: drop-shadow(0 30px 60px #0008); transform-origin:center center; }
-    .title3d .stroke { position:absolute; inset:0; color:transparent; -webkit-text-stroke: 16px #88c4ff1a; z-index:-1; filter: blur(4px); transform: translateZ(-30px) scale(1.02); backface-visibility:hidden; }
+    .title3d{ position:relative; font-family:'Archivo Black','Anton','Russo One', system-ui, sans-serif; font-weight:900; font-size:clamp(60px, 14vw, 230px); letter-spacing:0em; line-height:0.85; text-transform:uppercase; text-shadow: 0 3px 0 #1f2d44, 0 18px 40px #000a; transform-style:preserve-3d; will-change:transform, filter; filter: drop-shadow(0 30px 60px #0008); transform-origin:center center; }
+    .title3d .stroke { position:absolute; inset:0; color:transparent; -webkit-text-stroke: 22px #88c4ff22; z-index:-1; filter: blur(4px); transform: translateZ(-30px) scale(1.02); backface-visibility:hidden; }
     .title3d .fill{ background: linear-gradient(180deg, #f5fbff 0%, #cfe3ff 35%, #a4ccff 60%, #eaf4ff 100%); -webkit-background-clip:text; background-clip:text; color:transparent; position:relative; display:inline-block; backface-visibility:hidden; }
 
     .hero-cta{ margin-top:26px; display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap; }
@@ -48,7 +48,7 @@
     .container{ max-width:1100px; margin:0 auto; }
     .card{ background: var(--glass); border:1.5px solid var(--stroke); border-radius:20px; padding:22px; box-shadow: inset 0 0 0.5px #ffffffaa, 0 12px 30px #00000066; backdrop-filter: blur(14px) saturate(150%); -webkit-backdrop-filter: blur(14px) saturate(150%); }
     .grid{ display:grid; gap:16px; grid-template-columns: repeat( auto-fit, minmax(260px, 1fr) ); }
-    h2{ margin:0 0 14px; font-size:28px; letter-spacing:0.02em; }
+    h2{ margin:0 0 14px; font-size:28px; letter-spacing:0em; }
     p{ margin:0 10px 10px 0; opacity:0.85; }
 
     /* ======= GALLERY (glass cards) ======= */
@@ -125,15 +125,15 @@
       <h2>Скриншоты</h2>
       <div class="gallery-grid">
         <figure class="gcard" data-cap="Sandstone — загрузка">
-          <img class="gimg" loading="lazy" alt="Sandstone — загрузка" src="./img/csx-1.jpg"+"">
+          <img class="gimg" loading="lazy" alt="Sandstone — загрузка" src=\"./img/csx-1.jpg\">
           <figcaption class="gcap">Sandstone — загрузка</figcaption>
         </figure>
         <figure class="gcard" data-cap="Инвентарь CSX">
-          <img class="gimg" loading="lazy" alt="Инвентарь CSX" src="./img/csx-2.jpg"+"">
+          <img class="gimg" loading="lazy" alt="Инвентарь CSX" src=\"./img/csx-2.jpg\">
           <figcaption class="gcap">Инвентарь CSX</figcaption>
         </figure>
         <figure class="gcard" data-cap="Ночной Mirage — нож">
-          <img class="gimg" loading="lazy" alt="Ночной Mirage — нож" src="./img/csx-3.jpg"+"">
+          <img class="gimg" loading="lazy" alt="Ночной Mirage — нож" src=\"./img/csx-3.jpg\">
           <figcaption class="gcap">Ночной Mirage — нож</figcaption>
         </figure>
       </div>
@@ -143,11 +143,8 @@
   <!-- ABOUT SECTION -->
   <section>
     <div class="container grid">
-      <article class="card">
-        <h2>О сайте</h2>
-        <p><strong>CSX — официальный сайт</strong> для скачивания приватного сервера. Здесь публикуются актуальные ссылки на установку через Telegram‑бота и новости релизов из канала разработчика.</p>
-        <p>Интерфейс выполнен в стеклянном стиле с аккуратной 3D‑анимацией. Фон имитирует разбитое стекло, а осколки после короткой интро‑сцены «разлёта» зависают и мягко реагируют на движение курсора. Основной упор сделан на кнопку скачивания и удобную навигацию без лишнего визуального шума.</p>
-        <p>При необходимости сюда можно добавить changelog, системные требования и ссылки на APK/ZIP для разных платформ.</p>
+      $1
+        <p><strong>CSX — официальный сайт</strong> для скачивания приватного сервера.</p>
       </article>
     </div>
   </section>
@@ -174,7 +171,7 @@
     const el = document.getElementById('title3d');
     let tiltX = 0, tiltY = 0;      // actual
     let tX = 0, tY = 0;            // targets from cursor
-    const AMPL_X = 1.0; const AMPL_Y = 1.5; const EASE = 0.05; // very soft
+    const AMPL_X = 8.0; const AMPL_Y = 12.0; const EASE = 0.12; // very soft
 
     // Intro spin config — ends at 720° (same orientation as start)
     const tStart = performance.now();
@@ -203,7 +200,7 @@
     requestAnimationFrame(loop);
   })();
 
-  // ===== Glass shards: assemble -> explode -> hang (ultra soft) =====
+  // ===== Glass shards: assemble -> explode -> hang + reflections (ultra soft) =====
   (function(){
     const canvas = document.getElementById('shards');
     const ctx = canvas.getContext('2d');
@@ -214,12 +211,24 @@
       H = canvas.height = Math.floor(innerHeight * DPR);
       canvas.style.width = innerWidth + 'px'; canvas.style.height = innerHeight + 'px';
       initShards();
+      assignReflectionsOnce = false; // reassign after resize
     }
     window.addEventListener('resize', resize);
 
-    const COUNT = 140; const SHARDS = [];
+    // try to load screenshots from ./glass/glass-1.jpg..glass-12.jpg
+    const GLASS_SOURCES = Array.from({length:12}, (_,i)=>`./glass/glass-${i+1}.jpg`);
+    let GLASS_IMAGES = [];
+    function loadImage(src){
+      return new Promise(res=>{ const img = new Image(); img.decoding='async'; img.loading='eager'; img.crossOrigin='anonymous'; img.onload=()=>res(img); img.onerror=()=>res(null); img.src=src; });
+    }
+    Promise.all(GLASS_SOURCES.map(loadImage)).then(list=>{ GLASS_IMAGES = list.filter(Boolean); });
 
-    // mouse with smoothing for ultra-soft parallax
+    // shards state
+    const SHARDS = [];
+    const COUNT = 240; // количество осколков
+    let assignReflectionsOnce = false;
+
+    // mouse with smoothing for soft parallax (strength tuned elsewhere)
     const mouse = { tx:0.5, ty:0.5, x:0.5, y:0.5 };
     function onMove(e){
       const x = (e.clientX ?? (e.touches&&e.touches[0].clientX) ?? innerWidth/2) / innerWidth;
@@ -238,35 +247,98 @@
       for(let i=0;i<COUNT;i++){
         const d = Math.random()*1.2 + 0.2; const size = (Math.random()*16 + 6) * d;
         const homeX = Math.random()*W; const homeY = Math.random()*H;
-        SHARDS.push({ x: cx + (Math.random()-0.5)*18*DPR, y: cy + (Math.random()-0.5)*10*DPR, homeX, homeY, r: Math.random()*Math.PI*2, vr: (Math.random()-0.5)*0.0010, s: size, d, a: 0.55 + Math.random()*0.25 });
+        SHARDS.push({
+          x: cx + (Math.random()-0.5)*18*DPR,
+          y: cy + (Math.random()-0.5)*10*DPR,
+          homeX, homeY,
+          r: Math.random()*Math.PI*2,
+          vr: (Math.random()-0.5)*0.0010,
+          s: size, d, a: 0.55 + Math.random()*0.25,
+          // reflection params (optional)
+          img:null, refScale:1, refAlpha:0.2, flip:false, refUX:(Math.random()-0.5)*0.6, refUY:(Math.random()-0.5)*0.6
+        });
       }
       t0 = performance.now();
+    }
+
+    function pathShard(_w,_h){
+      ctx.beginPath();
+      ctx.moveTo(-_w*0.5, -_h);
+      ctx.lineTo(_w*0.65, -_h*0.15);
+      ctx.lineTo(-_w*0.25, _h*0.85);
+      ctx.closePath();
     }
 
     function drawShard(s){
       ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.r);
       const w = s.s * 1.2, h = s.s * (0.7 + Math.random()*0.2);
+
+      // optional reflection from screenshots
+      if(s.img){
+        pathShard(w,h);
+        ctx.save();
+        ctx.clip();
+        ctx.globalAlpha = s.refAlpha;
+        // mirror a bit like true reflection
+        if(s.flip){ ctx.scale(-1,1); }
+        const iw = s.img.width, ih = s.img.height;
+        const scale = Math.max((w*1.6)/iw, (h*1.6)/ih) * s.refScale;
+        const dw = iw*scale, dh = ih*scale;
+        let dx = -w*0.5 + s.refUX*w; let dy = -h + s.refUY*h;
+        if(s.flip){ dx = -dx - dw; }
+        // slight offset so reflection subtly parallax with mouse
+        const par = 6 * (1.4 - s.d);
+        dx += (mouse.x - 0.5) * par; dy += (mouse.y - 0.5) * par;
+        ctx.drawImage(s.img, dx, dy, dw, dh);
+        ctx.restore();
+      }
+
+      // glass fill & stroke over reflection
       const grad = ctx.createLinearGradient(-w, -h, w, h);
       grad.addColorStop(0, `rgba(215,240,255,${0.08 + 0.10*s.d})`);
       grad.addColorStop(0.5, `rgba(140,190,255,${0.05 + 0.08*s.d})`);
       grad.addColorStop(1, `rgba(255,255,255,${0.12 + 0.10*s.d})`);
-      ctx.beginPath(); ctx.moveTo(-w*0.5, -h); ctx.lineTo(w*0.65, -h*0.15); ctx.lineTo(-w*0.25, h*0.85); ctx.closePath();
+      pathShard(w,h);
       ctx.globalAlpha = s.a; ctx.fillStyle = grad; ctx.fill();
       ctx.lineWidth = 1 * DPR; ctx.strokeStyle = `rgba(180,220,255,${0.28 + 0.18*s.d})`; ctx.stroke();
+      // glare line
       ctx.globalAlpha = 0.22 + 0.12*s.d; ctx.beginPath(); ctx.moveTo(-w*0.25, -h*0.7); ctx.lineTo(w*0.18, -h*0.25); ctx.stroke();
+
       ctx.restore();
     }
 
+    function assignReflections(){
+      if(assignReflectionsOnce || !GLASS_IMAGES.length) return;
+      const reflectCount = Math.floor(SHARDS.length * 0.28); // ~28% осколков с отражением
+      const used = new Set(); let k = 0;
+      while(used.size < reflectCount){ used.add(Math.floor(Math.random()*SHARDS.length)); }
+      for(const idx of used){
+        const s = SHARDS[idx];
+        s.img = GLASS_IMAGES[k++ % GLASS_IMAGES.length];
+        s.refScale = 0.7 + Math.random()*0.7; // 0.7..1.4
+        s.refAlpha = 0.14 + Math.random()*0.20; // 0.14..0.34
+        s.flip = Math.random() < 0.65;
+        s.refUX = (Math.random()-0.5)*0.6; s.refUY = (Math.random()-0.5)*0.6;
+      }
+      assignReflectionsOnce = true;
+    }
+
     function loop(now){
-      mouse.x += (mouse.tx - mouse.x)*0.06; mouse.y += (mouse.ty - mouse.y)*0.06;
+      // stronger softening already tuned outside
+      mouse.x += (mouse.tx - mouse.x)*0.14; mouse.y += (mouse.ty - mouse.y)*0.14;
+
+      // once images loaded, assign reflections just once
+      if(GLASS_IMAGES.length) assignReflections();
+
       ctx.clearRect(0,0,W,H);
       const g = ctx.createRadialGradient(W*0.8,H*0.15, 20,  W*0.8,H*0.15, Math.max(W,H));
       g.addColorStop(0, 'rgba(60,110,190,0.20)'); g.addColorStop(1, 'rgba(10,15,22,0.0)'); ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+
       const elapsed = now - t0;
       for(const s of SHARDS){
         if(elapsed <= HOLD){ s.r += s.vr * 0.15; }
         else if(elapsed <= HOLD + BURST){ const p = easeOutCubic((elapsed - HOLD) / BURST); s.x = (W/2) + (s.homeX - W/2) * p; s.y = (H/2) + (s.homeY - H/2) * p; s.r += s.vr * 0.5; }
-        else { const parX = (mouse.x - 0.5) * 12 * (1.4 - s.d); const parY = (mouse.y - 0.5) * 12 * (1.4 - s.d); const tx = s.homeX + parX; const ty = s.homeY + parY; s.x += (tx - s.x) * 0.04; s.y += (ty - s.y) * 0.04; s.r += s.vr * 0.4; }
+        else { const parX = (mouse.x - 0.5) * 40 * (1.4 - s.d); const parY = (mouse.y - 0.5) * 40 * (1.4 - s.d); const tx = s.homeX + parX; const ty = s.homeY + parY; s.x += (tx - s.x) * 0.12; s.y += (ty - s.y) * 0.12; s.r += s.vr * 0.4; }
         drawShard(s);
       }
       requestAnimationFrame(loop);
