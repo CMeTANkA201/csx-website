@@ -11,20 +11,9 @@
     --glass-bg:rgba(255,255,255,.06); --glass-stroke:rgba(255,255,255,.18);
     --shadow:0 10px 30px rgba(0,0,0,.45); --radius:20px; --blur:14px; --accent:#fff;
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-
-    /* ==== КРУПНЕЕ КАРТОЧКИ СКРИНОВ ==== */
-    /* ПК: от 420 до 640px, динамично 42vw */
-    --card-w: clamp(420px, 42vw, 640px);
-    --card-ratio: 16/9; /* кинематографичное соотношение */
+    --card-w: 300px; --card-ratio: 16/9; /* ширина и соотношение сторон карточек (ПК) */
   }
-  @media (max-width:1024px){
-    :root{ --card-w: clamp(380px, 56vw, 520px); }
-  }
-  @media (max-width:820px){
-    /* Мобилки: почти на всю ширину, с отступами */
-    :root{ --card-w: clamp(320px, 92vw, 560px); }
-  }
-
+  @media (max-width:820px){ :root{ --card-w: 220px; } }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;line-height:1.45;overflow-x:hidden}
@@ -57,43 +46,51 @@
   .btn.monochrome{background:#111;color:#fff;border-color:rgba(255,255,255,.25)}
   .btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none}
 
-  /* ======= Ряд скринов (крупные карточки) ======= */
+  /* ======= Горизонтальный ряд скринов (улучшенный стиль) ======= */
   .row-wrap{position:relative;margin-top:16px}
-  .row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 0 10px}
+  .row{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:4px 0 10px}
   .row::-webkit-scrollbar{height:8px}
   .row::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:8px}
   .item{flex:0 0 var(--card-w); scroll-snap-align:start}
   .shot{
-    position:relative; overflow:hidden; border-radius:22px;
+    position:relative; overflow:hidden; border-radius:18px;
     background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
     border:1px solid rgba(255,255,255,.16);
-    box-shadow:0 12px 36px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.08);
+    box-shadow:0 10px 30px rgba(0,0,0,.50), inset 0 1px 0 rgba(255,255,255,.08);
     transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
     aspect-ratio: var(--card-ratio);
     isolation:isolate;
   }
+  /* стеклянная рамка с деликатным градиентом */
   .shot::after{
     content:""; position:absolute; inset:-1px;
     border-radius:inherit; pointer-events:none;
-    background:linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0)) border-box;
-    -webkit-mask:linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0) border-box;
-    -webkit-mask-composite:xor; mask-composite:exclude; border:1px solid transparent; opacity:.65;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0)) border-box;
+    -webkit-mask:
+      linear-gradient(#000 0 0) padding-box, 
+      linear-gradient(#000 0 0) border-box;
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    border:1px solid transparent;
+    opacity:.6;
   }
-  .shot:hover{ transform:translateY(-2px) scale(1.015); box-shadow:0 22px 50px rgba(0,0,0,.55); border-color:rgba(255,255,255,.30) }
+  .shot:hover{ transform:translateY(-2px) scale(1.01); box-shadow:0 16px 36px rgba(0,0,0,.55); border-color:rgba(255,255,255,.28) }
   .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.02) saturate(.92)}
-  .shot .glow{content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.18;
-    background:radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,.55), rgba(255,255,255,0) 60%)}
+  .shot .glow{
+    content:""; position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.18;
+    background:radial-gradient(120% 100% at 50% 0%, rgba(255,255,255,.55), rgba(255,255,255,0) 60%);
+  }
 
   .h-arrow{
     position:absolute;top:50%;transform:translateY(-50%);z-index:2;
-    width:48px;height:48px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
+    width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;
     background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25);backdrop-filter:blur(var(--blur));
     transition:.2s opacity,.2s transform
   }
-  .h-arrow:hover{transform:translateY(-50%) scale(1.05)}
+  .h-arrow:hover{transform:translateY(-50%) scale(1.04)}
   .h-arrow[disabled]{opacity:.35;pointer-events:none}
   .h-left{left:-6px} .h-right{right:-6px}
-  .h-arrow svg{width:20px;height:20px;stroke:#fff}
+  .h-arrow svg{width:18px;height:18px;stroke:#fff}
 
   /* ===== Лайтбокс ===== */
   .lightbox{
@@ -102,21 +99,21 @@
   }
   .lightbox[open]{display:flex}
   .lb-img-wrap{
-    position:relative; max-width:min(96vw,1400px); max-height:86vh; border-radius:20px; overflow:hidden;
+    position:relative; max-width:min(96vw,1100px); max-height:84vh; border-radius:18px; overflow:hidden;
     border:1px solid rgba(255,255,255,.18); background:#0b0b0c; box-shadow:0 30px 80px rgba(0,0,0,.6);
   }
-  .lb-img{display:block; width:auto; height:86vh; max-width:96vw; object-fit:contain; background:#0b0b0c}
+  .lb-img{display:block; width:auto; height:84vh; max-width:96vw; object-fit:contain; background:#0b0b0c}
   .lb-close,.lb-prev,.lb-next{
-    position:absolute; top:12px; width:48px; height:48px; border-radius:50%; display:grid; place-items:center; cursor:pointer;
+    position:absolute; top:12px; width:44px; height:44px; border-radius:50%; display:grid; place-items:center; cursor:pointer;
     background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(10px)
   }
   .lb-close{ right:12px }
-  .lb-prev,.lb-next{ top:calc(50% - 24px) }
+  .lb-prev,.lb-next{ top:calc(50% - 22px) }
   .lb-prev{ left:-56px } .lb-next{ right:-56px }
   @media (max-width:820px){
     .lb-prev{ left:8px } .lb-next{ right:8px } .lb-close{ top:8px; right:8px }
   }
-  .lb-btn svg{ width:22px; height:22px; stroke:#fff; }
+  .lb-btn svg{ width:20px; height:20px; stroke:#fff; }
 
   footer{color:var(--muted);padding:18px;text-align:center;border-top:1px solid rgba(255,255,255,.08);
     backdrop-filter:blur(var(--blur));background:linear-gradient(to top,rgba(10,10,12,.6),rgba(10,10,12,.28))}
@@ -147,6 +144,7 @@
     <div class="brand" aria-label="CSX приватный сервер">
       <span class="dot" aria-hidden="true"></span><span>CSX — приватный сервер</span>
     </div>
+    <!-- ПК-меню -->
     <nav class="top" aria-label="Главная навигация (ПК/планшет)" role="tablist">
       <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10v11h6"/><path d="M21 10v11h-6"/></svg><span>Главная</span>
@@ -161,6 +159,7 @@
   </div>
 </header>
 
+<!-- Мобильное нижнее меню -->
 <nav class="bottom" aria-label="Главная навигация (мобильная)" role="tablist">
   <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home" aria-label="Главная">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10v11h6"/><path d="M21 10v11h-6"/></svg>
@@ -225,7 +224,7 @@
     </div>
   </section>
 
-  <!-- TELEGRAM -->
+  <!-- TELEGRAM (как раньше) -->
   <section id="tab-tg" class="panel tab" hidden role="tabpanel" aria-labelledby="Телеграмм разработчика">
     <h1>Телеграмм разработчика</h1>
     <p class="lead">Каналы и контакты.</p>
@@ -245,11 +244,11 @@
       <p class="lead" style="margin-top:0">Личный канал со всеми сливами и новыми апдейтами.</p>
       <div class="cta-wrap">
         <a class="btn" href="tg://resolve?domain=lanonid_channel" aria-label="Открыть личный канал lanonid_channel">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11л6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
           <span>Открыть в Telegram</span>
         </a>
         <a class="btn monochrome" href="https://t.me/lanonid_channel" target="_blank" rel="noopener" aria-label="Открыть личный канал в браузере">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11л6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
           <span>t.me/lanonid_channel</span>
         </a>
       </div>
@@ -316,7 +315,7 @@ setTab((location.hash||'#home').replace('#',''));
     requestAnimationFrame(t)})();
 })();
 
-/* =================== СКРИНЫ: 01.png..50.png (PNG), крупный ряд + лайтбокс =================== */
+/* =================== СКРИНЫ: 01.png..50.png (PNG), красивый ряд + лайтбокс =================== */
 function buildPngList(limit=50){
   const urls=[];
   for(let i=1;i<=limit;i++){ const n=String(i).padStart(2,'0'); urls.push(`image/${n}.png`); }
@@ -334,7 +333,7 @@ function createRow(rowId, leftId, rightId, list){
     const glow=document.createElement('i'); glow.className='glow'; fig.appendChild(glow);
     const img=document.createElement('img'); img.alt=`Скриншот ${idx+1}`; img.loading='lazy'; img.decoding='async';
     img.onerror=()=>it.remove();
-    img.onclick=()=>openLightbox(src);
+    img.onclick=()=>openLightbox(src); // лайтбокс
     img.src=src;
     fig.appendChild(img); it.appendChild(fig); row.appendChild(it);
     used.push(src);
@@ -350,7 +349,7 @@ function createRow(rowId, leftId, rightId, list){
   }
   function scrollByCard(dir){
     const card = row.querySelector('.item');
-    const step = card ? card.getBoundingClientRect().width + 16 : row.clientWidth;
+    const step = card ? card.getBoundingClientRect().width + 14 : row.clientWidth;
     row.scrollBy({left: dir*step, behavior:'smooth'});
   }
   left.onclick=()=>scrollByCard(-1);
@@ -362,7 +361,7 @@ function createRow(rowId, leftId, rightId, list){
   return used;
 }
 
-/* Лайтбокс */
+/* Лайтбокс — полноэкранный просмотр */
 const lb = document.getElementById('lightbox');
 const lbImg = document.getElementById('lb-img');
 const lbClose = document.getElementById('lb-close');
@@ -391,18 +390,20 @@ addEventListener('keydown', (e)=>{
   if(e.key==='ArrowLeft') stepLightbox(-1);
   if(e.key==='ArrowRight') stepLightbox(1);
 });
-(function(){ // свайпы в лайтбоксе
+// свайпы в лайтбоксе
+(function(){
   let sx=0,cx=0,drag=false;
   lb.addEventListener('touchstart',e=>{drag=true;sx=e.touches[0].clientX;cx=sx},{passive:true});
   lb.addEventListener('touchmove',e=>{if(drag)cx=e.touches[0].clientX},{passive:true});
   lb.addEventListener('touchend',()=>{if(!drag)return; const dx=cx-sx; if(Math.abs(dx)>40){ stepLightbox(dx>0?-1:1); } drag=false;},{passive:true});
 })();
 
-/* Инициализация */
+/* Инициализация двух рядов + список для лайтбокса */
 (function bootScreens(){
   const list = buildPngList(50);
   const usedHome = createRow('home-row','home-left','home-right', list);
   const usedDown = createRow('down-row','down-left','down-right', list);
+  // общий список для лайтбокса (без дублей)
   lbList = [...new Set([...usedHome, ...usedDown])].filter(Boolean);
 })();
 
@@ -410,7 +411,7 @@ addEventListener('keydown', (e)=>{
 document.getElementById('btn-android').addEventListener('click', ()=>{ window.location.href = ANDROID_DOWNLOAD_URL; });
 document.getElementById('btn-windows').addEventListener('click', ()=>{ window.location.href = WINDOWS_DOWNLOAD_URL; });
 
-/* Стрелки-клавиши между вкладками (отключаем, если открыт лайтбокс) */
+/* Стрелки-клавиши между вкладками */
 addEventListener('keydown',(e)=>{
   if(!['ArrowLeft','ArrowRight'].includes(e.key) || lb.hasAttribute('open')) return;
   const order=['home','download','tg'];
