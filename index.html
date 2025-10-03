@@ -11,12 +11,9 @@
     --glass-bg:rgba(255,255,255,0.06); --glass-stroke:rgba(255,255,255,0.18);
     --shadow:0 10px 30px rgba(0,0,0,0.45); --radius:18px; --blur:14px; --accent:#fff;
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-    --card-w: 300px; /* ширина карточки на ПК */
-    --card-h: 170px; /* высота превью */
+    --card-w: 300px; --card-h: 170px; /* размеры карточки (ПК) */
   }
-  @media (max-width:820px){
-    :root{ --card-w: 210px; --card-h: 120px; }
-  }
+  @media (max-width:820px){ :root{ --card-w: 210px; --card-h: 120px; } }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;background:var(--bg);color:var(--fg);-webkit-font-smoothing:antialiased;line-height:1.45;overflow-x:hidden}
@@ -30,30 +27,33 @@
   .brand .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 18px rgba(255,255,255,.45)}
 
   nav.top{margin-top:12px;display:flex;gap:10px}
-  .tab-btn{appearance:none;border:1px solid var(--glass-stroke);color:var(--fg);background:var(--glass-bg);backdrop-filter:blur(var(--blur));padding:10px 14px;border-radius:var(--radius);display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);cursor:pointer;transition:.2s transform,.2s background,.2s border-color,.2s opacity;opacity:.95}
+  .tab-btn{appearance:none;border:1px solid var(--glass-stroke);color:var(--fg);background:var(--glass-bg);backdrop-filter:blur(var(--blur));
+    padding:10px 14px;border-radius:var(--radius);display:flex;align-items:center;gap:10px;box-shadow:var(--shadow);cursor:pointer;transition:.2s;opacity:.95}
   .tab-btn[aria-selected="true"]{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.10)}
   .tab-btn:hover{transform:translateY(-1px)}
   .tab-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
 
   main{padding:28px 18px 110px}
-  .panel{border:1px solid var(--glass-stroke);background:var(--glass-bg);backdrop-filter:blur(var(--blur));border-radius:calc(var(--radius) + 4px);box-shadow:var(--shadow);padding:20px}
+  .panel{border:1px solid var(--glass-stroke);background:var(--glass-bg);backdrop-filter:blur(var(--blur));
+    border-radius:calc(var(--radius) + 4px);box-shadow:var(--shadow);padding:20px}
   h1{font-size:1.6rem;margin:0 0 8px}
   p.lead{color:var(--muted);margin:0 0 18px}
 
   .cta-wrap{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0 4px}
-  .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;text-decoration:none;color:#000;background:#fff;font-weight:700;border:1px solid rgba(255,255,255,.45);transition:.2s transform,.2s opacity,.2s box-shadow;box-shadow:0 6px 24px rgba(255,255,255,0.12)}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;text-decoration:none;color:#000;background:#fff;font-weight:700;
+    border:1px solid rgba(255,255,255,.45);transition:.2s;box-shadow:0 6px 24px rgba(255,255,255,0.12)}
   .btn:active{transform:translateY(1px)}
   .btn.monochrome{background:#111;color:#fff;border-color:rgba(255,255,255,.25)}
   .btn svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none}
 
-  /* ======= ROW SLIDER ======= */
+  /* ======= Горизонтальный ряд скринов ======= */
   .row-wrap{position:relative;margin-top:16px}
   .row{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:6px}
   .row::-webkit-scrollbar{height:8px}
   .row::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:8px}
   .item{flex:0 0 var(--card-w); scroll-snap-align:start}
   .shot{position:relative;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:#0f0f10;overflow:hidden;box-shadow:0 6px 20px rgba(0,0,0,.35)}
-  .shot::before{content:"";display:block;height:var(--card-h)} /* фиксированная высота ряда */
+  .shot::before{content:"";display:block;height:var(--card-h)} /* фикс высота превью */
   .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.02) saturate(.9)}
 
   .h-arrow{
@@ -67,9 +67,11 @@
   .h-left{left:-6px} .h-right{right:-6px}
   .h-arrow svg{width:18px;height:18px;stroke:#fff}
 
-  footer{color:var(--muted);padding:18px;text-align:center;border-top:1px solid rgba(255,255,255,.08);backdrop-filter:blur(var(--blur));background:linear-gradient(to top,rgba(10,10,12,.6),rgba(10,10,12,.28))}
+  footer{color:var(--muted);padding:18px;text-align:center;border-top:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(var(--blur));background:linear-gradient(to top,rgba(10,10,12,.6),rgba(10,10,12,.28))}
 
-  nav.bottom{position:fixed;bottom:0;left:0;right:0;z-index:12;display:none;padding:10px 12px calc(10px + var(--safe-area-bottom));backdrop-filter:blur(var(--blur));background:rgba(10,10,12,.5);border-top:1px solid rgba(255,255,255,.1)}
+  nav.bottom{position:fixed;bottom:0;left:0;right:0;z-index:12;display:none;padding:10px 12px calc(10px + var(--safe-area-bottom));
+    backdrop-filter:blur(var(--blur));background:rgba(10,10,12,.5);border-top:1px solid rgba(255,255,255,.1)}
   .bottom .tab-btn{flex:1;justify-content:center;padding:10px 12px;font-size:.9rem}
   .bottom .tab-btn span{display:none}
 
@@ -94,29 +96,34 @@
     <div class="brand" aria-label="CSX приватный сервер">
       <span class="dot" aria-hidden="true"></span><span>CSX — приватный сервер</span>
     </div>
+    <!-- ПК-меню -->
     <nav class="top" aria-label="Главная навигация (ПК/планшет)" role="tablist">
       <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home">
+        <!-- Домик -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10v11h6"/><path d="M21 10v11h-6"/></svg><span>Главная</span>
       </button>
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-download" data-tab="download">
+        <!-- Загрузка -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Скачать CSX</span>
       </button>
       <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tg" data-tab="tg">
+        <!-- Telegram -->
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg><span>Телеграмм разработчика</span>
       </button>
     </nav>
   </div>
 </header>
 
+<!-- Мобильное нижнее меню -->
 <nav class="bottom" aria-label="Главная навигация (мобильная)" role="tablist">
   <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home" aria-label="Главная">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10v11h6"/><path d="M21 10v11h-6"/></svg><span>Главная</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10v11h6"/><path d="M21 10v11h-6"/></svg>
   </button>
   <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-download" data-tab="download" aria-label="Скачать CSX">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Скачать</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
   </button>
   <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tg" data-tab="tg" aria-label="Телеграмм">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg><span>Telegram</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
   </button>
 </nav>
 
@@ -132,11 +139,11 @@
     </div>
 
     <!-- Ряд скриншотов -->
-    <div class="row-wrap" id="row-home-wrap" hidden>
+    <div class="row-wrap" id="home-wrap">
       <button class="h-arrow h-left" id="home-left" aria-label="Влево" hidden>
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <div class="row" id="row-home" aria-live="polite"></div>
+      <div class="row" id="home-row" aria-live="polite"></div>
       <button class="h-arrow h-right" id="home-right" aria-label="Вправо" hidden>
         <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
       </button>
@@ -147,31 +154,36 @@
   <section id="tab-download" class="panel tab" hidden role="tabpanel" aria-labelledby="Скачать CSX">
     <h1>Скачать CSX</h1>
     <p class="lead">Файл загружается напрямую с Google Drive</p>
+
+    <!-- Кнопки загрузок -->
     <div class="cta-wrap">
-      <button class="btn" id="download-apk" aria-label="Скачать APK CSX">
+      <button class="btn" id="btn-android" aria-label="Скачать для Android">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
-        <span>Скачать CSX.apk</span>
+        <span>Скачать для Android</span>
+      </button>
+      <button class="btn" id="btn-windows" aria-label="Скачать для Windows">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+        <span>Скачать для Windows</span>
       </button>
     </div>
 
     <!-- Ряд скриншотов -->
-    <div class="row-wrap" id="row-down-wrap" hidden>
+    <div class="row-wrap" id="down-wrap">
       <button class="h-arrow h-left" id="down-left" aria-label="Влево" hidden>
         <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <div class="row" id="row-down" aria-live="polite"></div>
+      <div class="row" id="down-row" aria-live="polite"></div>
       <button class="h-arrow h-right" id="down-right" aria-label="Вправо" hidden>
         <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
       </button>
     </div>
   </section>
 
-  <!-- TELEGRAM -->
+  <!-- TELEGRAM (оставил как было) -->
   <section id="tab-tg" class="panel tab" hidden role="tabpanel" aria-labelledby="Телеграмм разработчика">
     <h1>Телеграмм разработчика</h1>
     <p class="lead">Каналы и контакты.</p>
-
-    <!-- Основной -->
+    <!-- Основной канал -->
     <section class="panel" aria-label="Основной канал" style="margin:0 0 14px 0">
       <div class="cta-wrap">
         <a class="btn" href="tg://resolve?domain=Standoff_CSX" aria-label="Открыть Telegram канал Standoff_CSX">
@@ -184,8 +196,7 @@
         </a>
       </div>
     </section>
-
-    <!-- Личный — отдельным блоком ниже -->
+    <!-- Личный канал отдельным блоком ниже -->
     <section class="panel" aria-label="Личный канал разработчика">
       <p class="lead" style="margin-top:0">Личный канал со всеми сливами и новыми апдейтами.</p>
       <div class="cta-wrap">
@@ -207,7 +218,13 @@
 </footer>
 
 <script>
-/* Год */
+/* =================== НАСТРОЙКИ ССЫЛОК (замени на свои) =================== */
+// <<< ВСТАВЬ ССЫЛКУ ТУТ >>> прямой линк на APK (Android)
+const ANDROID_DOWNLOAD_URL = "https://drive.google.com/uc?export=download&id=12yTLnCPvpUk8-u2buWpQw-Sknqdjb-z_";
+// <<< ВСТАВЬ ССЫЛКУ ТУТ >>> линк на установщик/архив для Windows
+const WINDOWS_DOWNLOAD_URL = "https://example.com/CSX-setup.exe"; // замени на свою ссылку
+
+/* =================== ОБЩЕЕ =================== */
 document.getElementById('year').textContent = new Date().getFullYear();
 
 /* Табы */
@@ -226,7 +243,7 @@ document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()
 document.getElementById('to-download').addEventListener('click', (e)=>{e.preventDefault();setTab('download')});
 setTab((location.hash||'#home').replace('#',''));
 
-/* Пыль на фоне */
+/* Фон-пыль */
 (function(){
   const c=document.getElementById('dust'),x=c.getContext('2d');
   let w=c.width=innerWidth,h=c.height=innerHeight;
@@ -239,47 +256,38 @@ setTab((location.hash||'#home').replace('#',''));
     requestAnimationFrame(t)})();
 })();
 
-/* ===== СКРИНЫ: грузим существующие и строим один ряд со стрелками ===== */
-async function collectExisting(max=200){
-  const EXT=['png','jpg','jpeg','webp','gif','PNG','JPG','JPEG','WEBP','GIF'];
-  const names=[]; for(let i=1;i<=max;i++){ names.push(String(i).padStart(2,'0')); names.push(String(i)); }
-  function probe(src){ return new Promise(res=>{ const im=new Image(); im.onload=()=>res(src); im.onerror=()=>res(null); im.decoding='async'; im.loading='lazy'; im.src=src; });}
-  const out=[];
-  for(const n of names){
-    let found=null;
-    for(const e of EXT){ const ok=await probe(`image/${n}.${e}`); if(ok){ found=ok; break; } }
-    if(found){ // избегаем дублей 01 vs 1
-      const base = n.replace(/^0+/,'');
-      if(!out.some(s=>s.replace(/^.*\/(\d+)\.\w+$/,'$1')===base)) out.push(found);
-    }
+/* =================== СКРИНЫ ===================
+   Жёстко ищем image/01.png .. image/50.png (только PNG — как в твоём репо).
+   Все вставляем в ряд; несуществующие — удаляются по onerror.
+========================================================================== */
+function buildPngList(limit=50){
+  const urls=[];
+  for(let i=1;i<=limit;i++){
+    const nn=String(i).padStart(2,'0');
+    urls.push(`image/${nn}.png`);
   }
-  return out;
+  return urls;
 }
-
-function makeRow(containerId, leftBtnId, rightBtnId, sources){
-  if(!sources.length) return;
-  const wrap = document.getElementById(containerId+'-wrap') || document.getElementById(containerId.replace('-row','')+'-wrap');
-  const row = document.getElementById(containerId);
-  const left = document.getElementById(leftBtnId), right = document.getElementById(rightBtnId);
-  wrap.hidden = false;
-
-  // заполнение
-  row.innerHTML='';
-  sources.forEach((src,i)=>{
-    const it=document.createElement('div'); it.className='item';
+function makeRow(rowId, leftId, rightId, urls){
+  const wrap = document.getElementById(rowId.replace('-row','-wrap'));
+  const row = document.getElementById(rowId);
+  const left = document.getElementById(leftId);
+  const right = document.getElementById(rightId);
+  row.innerHTML = "";
+  urls.forEach((src,i)=>{
+    const item=document.createElement('div'); item.className='item';
     const fig=document.createElement('figure'); fig.className='shot';
-    const img=document.createElement('img'); img.alt=`Скриншот ${i+1}`; img.src=src;
-    fig.appendChild(img); it.appendChild(fig); row.appendChild(it);
+    const img=document.createElement('img'); img.alt=`Скриншот ${i+1}`;
+    img.onerror=()=>item.remove(); // убираем те, которых нет
+    img.src=src;
+    fig.appendChild(img); item.appendChild(fig); row.appendChild(item);
   });
-
   function updateArrows(){
-    // показываем стрелки только когда есть что листать
     const canLeft = row.scrollLeft > 2;
     const canRight = row.scrollLeft + row.clientWidth < row.scrollWidth - 2;
     left.hidden = right.hidden = false;
     left.toggleAttribute('disabled', !canLeft);
     right.toggleAttribute('disabled', !canRight);
-    // если всё влезает — прячем обе
     if(row.scrollWidth <= row.clientWidth + 2){ left.hidden = right.hidden = true; }
   }
   function scrollByCards(dir){
@@ -287,35 +295,32 @@ function makeRow(containerId, leftBtnId, rightBtnId, sources){
     const step = card ? card.getBoundingClientRect().width + 12 : row.clientWidth;
     row.scrollBy({left: dir*step, behavior:'smooth'});
   }
-  left.addEventListener('click', ()=>scrollByCards(-1));
-  right.addEventListener('click', ()=>scrollByCards(1));
+  left.onclick=()=>scrollByCards(-1);
+  right.onclick=()=>scrollByCards(1);
   row.addEventListener('scroll', updateArrows, {passive:true});
   addEventListener('resize', updateArrows, {passive:true});
-  // начальная инициализация
-  setTimeout(updateArrows, 50);
+  // показать контейнер и обновить стрелки после загрузки/лейаута
+  wrap && (wrap.hidden=false);
+  setTimeout(updateArrows, 200);
 }
-
-(async function boot(){
-  const imgs = await collectExisting(50); // возьмём до 50 реально существующих
-  // на обе секции показываем один и тот же ряд
-  makeRow('row-home','home-left','home-right',imgs);
-  makeRow('row-down','down-left','down-right',imgs);
-
-  // Если совсем пусто — подсказка
-  if(!imgs.length){
-    ['row-home','row-down'].forEach(id=>{
-      const r = document.getElementById(id);
-      const w = r.parentElement;
-      w.hidden = false;
-      r.innerHTML = `<div class="panel" role="note" style="width:100%">Скриншоты не найдены. Проверь путь <code>/image/01.png</code>, <code>/image/02.png</code> …</div>`;
-    });
-  }
+(function bootScreens(){
+  const list = buildPngList(50);
+  makeRow('home-row','home-left','home-right',list);
+  makeRow('down-row','down-left','down-right',list);
 })();
 
-/* ===== Скачивание ===== */
-const DRIVE_ID="12yTLnCPvpUk8-u2buWpQw-Sknqdjb-z_";
-const DRIVE_URL=`https://drive.google.com/uc?export=download&id=${DRIVE_ID}`;
-document.getElementById('download-apk').addEventListener('click', ()=>{ window.location.href = DRIVE_URL; });
+/* =================== КНОПКИ СКАЧИВАНИЯ =================== */
+document.getElementById('btn-android').addEventListener('click', ()=>{ window.location.href = ANDROID_DOWNLOAD_URL; });
+document.getElementById('btn-windows').addEventListener('click', ()=>{ window.location.href = WINDOWS_DOWNLOAD_URL; });
+
+/* Стрелки-клавиши между вкладками */
+addEventListener('keydown',(e)=>{
+  if(!['ArrowLeft','ArrowRight'].includes(e.key))return;
+  const order=['home','download','tg'];
+  const cur=order.findIndex(t=>document.querySelector(`[data-tab="${t}"]`).getAttribute('aria-selected')==='true');
+  const next=(cur+(e.key==='ArrowRight'?1:-1)+order.length)%order.length;
+  setTab(order[next]);
+});
 </script>
 </body>
 </html>
