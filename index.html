@@ -44,7 +44,7 @@
   .gallery{margin-top:18px}
   .grid{display:grid;gap:12px;grid-template-columns:repeat(3,minmax(0,1fr))}
   .grid .shot{position:relative;overflow:hidden;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:#0f0f10}
-  /* фикс невидимости: в сетке — height:auto */
+  /* главное: в сетке высота авто, чтобы не пропадали */
   .grid .shot img{width:100%;height:auto;display:block;filter:contrast(1.02) saturate(.9)}
 
   .carousel{position:relative;overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.14)}
@@ -104,7 +104,7 @@
 
 <nav class="bottom" aria-label="Главная навигация (мобильная)" role="tablist">
   <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home" aria-label="Главная">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10v11h6"/><path d="M21 10v11h-6"/></svg><span>Главная</span>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"/><path d="M9 22V12h6v10"/><path d="M3 10в11h6"/><path d="M21 10v11h-6"/></svg><span>Главная</span>
   </button>
   <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-download" data-tab="download" aria-label="Скачать CSX">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg><span>Скачать</span>
@@ -115,6 +115,7 @@
 </nav>
 
 <main id="main" class="container" role="main">
+  <!-- HOME -->
   <section id="tab-home" class="panel tab" role="tabpanel" aria-labelledby="Главная">
     <h1>CSX — приватный сервер</h1>
     <p class="lead">Чёрно-белый iOS-стайл со стеклом. Ниже — скриншоты проекта.</p>
@@ -131,9 +132,10 @@
     <div class="gallery" id="gallery-home" aria-live="polite" aria-busy="true"></div>
   </section>
 
+  <!-- DOWNLOAD -->
   <section id="tab-download" class="panel tab" hidden role="tabpanel" aria-labelledby="Скачать CSX">
     <h1>Скачать CSX</h1>
-    <p class="lead">Файл загружается с Google Drive без перехода со страницы.</p>
+    <p class="lead">Файл загружается напрямую с Google Drive (без ухода со страницы на просмотрщик).</p>
     <div class="cta-wrap">
       <button class="btn" id="download-apk-2" aria-label="Скачать APK CSX">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
@@ -143,18 +145,29 @@
     <div class="gallery" id="gallery-download" aria-live="polite" aria-busy="true"></div>
   </section>
 
+  <!-- TELEGRAM -->
   <section id="tab-tg" class="panel tab" hidden role="tabpanel" aria-labelledby="Телеграмм разработчика">
     <h1>Телеграмм разработчика</h1>
-    <p class="lead">Связаться напрямую в Telegram.</p>
+    <p class="lead">Каналы и контакты.</p>
     <div class="cta-wrap">
-      <a class="btn" href="tg://resolve?domain=Standoff_CSX" aria-label="Открыть Telegram по протоколу tg">
+      <!-- Основной канал -->
+      <a class="btn" href="tg://resolve?domain=Standoff_CSX" aria-label="Открыть Telegram канал Standoff_CSX">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
         <span>Открыть в Telegram</span>
       </a>
-      <a class="btn monochrome" href="https://t.me/Standoff_CSX" target="_blank" rel="noopener"
-         aria-label="Открыть профиль Telegram в браузере">
+      <a class="btn monochrome" href="https://t.me/Standoff_CSX" target="_blank" rel="noopener" aria-label="Открыть канал в браузере">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
         <span>t.me/Standoff_CSX</span>
+      </a>
+
+      <!-- Личный канал разработчика (замени username_personal на свой) -->
+      <a class="btn" href="tg://resolve?domain=username_personal" aria-label="Открыть личный канал разработчика">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
+        <span>Личный канал</span>
+      </a>
+      <a class="btn monochrome" href="https://t.me/username_personal" target="_blank" rel="noopener" aria-label="Открыть личный канал в браузере">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"/><path d="M8 13l4 3"/></svg>
+        <span>t.me/username_personal</span>
       </a>
     </div>
   </section>
@@ -173,8 +186,8 @@ const tabs = ["home","download","tg"];
 const tabPanels = Object.fromEntries(tabs.map(id=>[id,document.getElementById('tab-'+id)]));
 function setTab(id){
   tabs.forEach(t=>{
-    const sel = (t===id);
-    tabPanels[t].hidden = !sel;
+    const sel=(t===id);
+    tabPanels[t].hidden=!sel;
     document.querySelectorAll(`[data-tab="${t}"]`).forEach(b=>b.setAttribute('aria-selected', String(sel)));
   });
   history.replaceState(null,"",`#${id}`);
@@ -183,7 +196,7 @@ document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()
 (document.getElementById('to-download')||{}).addEventListener?.('click',(e)=>{e.preventDefault();setTab('download');scrollTo({top:0,behavior:'smooth'})});
 setTab((location.hash||'#home').replace('#',''));
 
-/* Sand dust background */
+/* Dust bg */
 (function(){
   const c=document.getElementById('dust'),x=c.getContext('2d');
   let w=c.width=innerWidth,h=c.height=innerHeight;
@@ -196,35 +209,32 @@ setTab((location.hash||'#home').replace('#',''));
     requestAnimationFrame(t)})();
 })();
 
-/* Gallery loader: supports lower/UPPER case & leading zeros */
+/* ===== Gallery loader: zero-padded first (01,02,...) then plain (1,2,...) ===== */
 async function loadScreenshots({maxIndex=200, missStreakLimit=12, basePath='image'} = {}){
-  const exts = ['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP'];
-  const indicesFor = (i)=>[`${i}`, i<10?`0${i}`:null].filter(Boolean); // 1 and 01
-  const results=[]; let missStreak=0;
+  const exts = ['png','jpg','jpeg','webp','gif','PNG','JPG','JPEG','WEBP','GIF'];
+  const makeNames = (i)=>[String(i).padStart(2,'0'), String(i)]; // '01' then '1'
+  const results=[]; let miss=0;
 
-  async function tryNames(names){
-    for(const name of names){
-      for(const ext of exts){
-        const ok = await probe(`./${basePath}/${name}.${ext}`);
-        if(ok) return ok;
-      }
-    }
-    return null;
-  }
-  function probe(src){
+  async function probe(src){
     return new Promise(res=>{
       const img=new Image();
-      img.decoding='async'; img.loading='lazy'; img.alt='скрин';
-      img.onload=()=>res({src});
-      img.onerror=()=>res(null);
-      img.src=src;
+      img.decoding='async'; img.loading='lazy';
+      img.onload=()=>res(src); img.onerror=()=>res(null); img.src=src;
     });
   }
 
   for(let i=1;i<=maxIndex;i++){
-    const found = await tryNames(indicesFor(i));
-    if(found){ results.push(found); missStreak=0; }
-    else if(++missStreak>=missStreakLimit) break;
+    let found=null;
+    for(const name of makeNames(i)){
+      for(const ext of exts){
+        const src=`./${basePath}/${name}.${ext}`;
+        const ok=await probe(src);
+        if(ok){ found=ok; break; }
+      }
+      if(found) break;
+    }
+    if(found){ results.push({src:found}); miss=0; }
+    else if(++miss>=missStreakLimit) break;
   }
   return results;
 }
@@ -270,48 +280,24 @@ function renderCarousel(container, items){
   const home=document.getElementById('gallery-home'); const down=document.getElementById('gallery-download');
   mount(home); mount(down);
   if(imgs.length===0){
-    [home,down].forEach(el=>{el.setAttribute('aria-busy','false'); el.innerHTML=`<div class="panel" role="note" style="margin-top:8px">Скриншоты не найдены. Добавьте файлы <code>/image/1.png</code>, <code>2.jpg</code>, … (поддерживаются PNG/JPG/JPEG/WEBP, включая <code>01.png</code>).</div>`;});
+    [home,down].forEach(el=>{
+      el.setAttribute('aria-busy','false');
+      el.innerHTML=`<div class="panel" role="note" style="margin-top:8px">
+        Скриншоты не найдены. Убедись, что файлы лежат по путям <code>/image/01.png</code>, <code>/image/02.png</code> … (поддерживаются PNG/JPG/JPEG/WEBP/GIF).
+      </div>`;
+    });
   }
 })();
 
-/* APK download: Google Drive without leaving page */
+/* ====== Download: прямой редирект на uc?export=download ====== */
 const DRIVE_ID = "12yTLnCPvpUk8-u2buWpQw-Sknqdjb-z_";
 const DRIVE_URL = `https://drive.google.com/uc?export=download&id=${DRIVE_ID}`;
+// Жмём — остаёмся на странице, но браузер начинает скачивание:
+function startDownload(){ window.location.href = DRIVE_URL; }
+document.getElementById('download-apk').addEventListener('click', startDownload);
+document.getElementById('download-apk-2').addEventListener('click', startDownload);
 
-async function downloadViaFetchOrIframe(filename="CSX.apk"){
-  try{
-    const res = await fetch(DRIVE_URL, {credentials:"omit"});
-    const ctype = res.headers.get('content-type')||'';
-    // If we really got the file
-    if(res.ok && !ctype.includes('text/html')){
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = filename;
-      document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(()=>URL.revokeObjectURL(url), 2000);
-      return;
-    }
-    // Fallback: hidden iframe (stays on page; browser shows download)
-    triggerIframeDownload();
-  }catch(_){
-    triggerIframeDownload();
-  }
-}
-function triggerIframeDownload(){
-  let iframe = document.getElementById('gdrive-dl');
-  if(!iframe){
-    iframe = document.createElement('iframe');
-    iframe.id='gdrive-dl'; iframe.style.display='none'; iframe.referrerPolicy='no-referrer';
-    document.body.appendChild(iframe);
-  }
-  iframe.src = DRIVE_URL;
-}
-
-document.getElementById('download-apk').addEventListener('click', ()=>downloadViaFetchOrIframe());
-document.getElementById('download-apk-2').addEventListener('click', ()=>downloadViaFetchOrIframe());
-
-/* Keyboard: arrows to switch tabs */
+/* Keyboard: стрелки переключают вкладки */
 addEventListener('keydown',(e)=>{
   if(!['ArrowLeft','ArrowRight'].includes(e.key))return;
   const order=["home","download","tg"];
