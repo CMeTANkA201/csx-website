@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>CSX — приватный сервер</title>
+<meta name="color-scheme" content="dark light" />
+<style>
+  :root{
+    --bg:#0b0b0c;
+    --fg:#ffffff;
+    --muted:#bfbfbf;
+    --glass-bg:rgba(255,255,255,0.06);
+    --glass-stroke:rgba(255,255,255,0.18);
+    --shadow:0 10px 30px rgba(0,0,0,0.45);
+    --radius:18px;
+    --blur:14px;
+    --accent:#ffffff; /* монохром */
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--fg);
+    -webkit-font-smoothing:antialiased; line-height:1.45; overflow-x:hidden;
+  }
+
+  /* Background canvas covers all */
+  #bg{
+    position:fixed; inset:0; z-index:-1; background: radial-gradient(1200px 800px at 20% 10%, #111 0%, #0b0b0c 45%, #060607 100%);
+  }
+  canvas.dust{
+    position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.55;
+    mix-blend-mode:screen;
+  }
+
+  header{
+    position:sticky; top:0; z-index:10; backdrop-filter: blur(var(--blur));
+    background: linear-gradient(to bottom, rgba(10,10,12,.7), rgba(10,10,12,.35));
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .container{max-width:1100px; margin:0 auto; padding:16px 18px;}
+  .brand{
+    display:flex; align-items:center; gap:12px; letter-spacing:.3px;
+    font-weight:700; font-size:1.05rem; text-transform:uppercase;
+  }
+  .brand .dot{width:10px;height:10px;border-radius:50%;
+    background:var(--accent); box-shadow:0 0 18px rgba(255,255,255,.45);
+  }
+
+  nav.top{
+    margin-top:12px; display:flex; gap:10px;
+  }
+  .tab-btn{
+    appearance:none; border:1px solid var(--glass-stroke); color:var(--fg);
+    background:var(--glass-bg); backdrop-filter: blur(var(--blur));
+    padding:10px 14px; border-radius:var(--radius); display:flex; align-items:center; gap:10px;
+    box-shadow: var(--shadow); cursor:pointer; transition: .2s transform, .2s background, .2s border-color, .2s opacity;
+    opacity:.95;
+  }
+  .tab-btn[aria-selected="true"]{ border-color: rgba(255,255,255,.35); background: rgba(255,255,255,0.10); }
+  .tab-btn:hover{ transform:translateY(-1px); }
+  .tab-btn svg{ width:18px; height:18px; fill:none; stroke:currentColor; stroke-width:2; }
+
+  main{padding:28px 18px 110px;}
+  .panel{
+    border:1px solid var(--glass-stroke); background: var(--glass-bg);
+    backdrop-filter: blur(var(--blur)); border-radius: calc(var(--radius) + 4px);
+    box-shadow: var(--shadow); padding:20px;
+  }
+  h1{font-size:1.6rem; margin:0 0 8px}
+  p.lead{color:var(--muted); margin:0 0 18px}
+
+  .cta-wrap{display:flex; flex-wrap:wrap; gap:12px; margin:14px 0 4px}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:14px;
+    text-decoration:none; color:#000; background:#fff; font-weight:700;
+    border:1px solid rgba(255,255,255,.45);
+    transition:.2s transform, .2s opacity, .2s box-shadow;
+    box-shadow: 0 6px 24px rgba(255,255,255,0.12);
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.monochrome{background:#111; color:#fff; border-color: rgba(255,255,255,.25)}
+  .btn svg{ width:18px; height:18px; stroke:currentColor; stroke-width:2; fill:none; }
+
+  /* Gallery base */
+  .gallery{ margin-top:18px; }
+  .grid{
+    display:grid; gap:12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .grid .shot, .carousel .shot{
+    position:relative; overflow:hidden; border-radius:16px; border:1px solid rgba(255,255,255,.14);
+    background: #0f0f10;
+  }
+  .shot img{
+    width:100%; height:100%; object-fit:cover; display:block; filter: contrast(1.02) saturate(.9);
+  }
+
+  /* Carousel when many */
+  .carousel{
+    position:relative; overflow:hidden; border-radius:18px; border:1px solid rgba(255,255,255,.14);
+  }
+  .track{
+    display:flex; transition: transform .35s ease; will-change: transform;
+    touch-action: pan-y;
+  }
+  .slide{
+    min-width:100%; padding:8px; display:flex;
+  }
+  .slide .shot{ width:100%; }
+
+  .arrow{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:42px; height:42px; border-radius:50%;
+    display:grid; place-items:center; cursor:pointer;
+    background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.25);
+    backdrop-filter: blur(var(--blur));
+    transition: .2s opacity, .2s transform;
+  }
+  .arrow:hover{ transform:translateY(-50%) scale(1.04) }
+  .arrow[disabled]{ opacity:.35; pointer-events:none }
+  .arrow.left{ left:8px } .arrow.right{ right:8px }
+  .arrow svg{ width:18px; height:18px; stroke:#fff }
+
+  footer{
+    color:var(--muted); padding:18px; text-align:center; border-top:1px solid rgba(255,255,255,.08);
+    backdrop-filter: blur(var(--blur)); background:linear-gradient(to top, rgba(10,10,12,.6), rgba(10,10,12,.28));
+  }
+
+  /* Mobile bottom nav */
+  nav.bottom{
+    position:fixed; bottom:0; left:0; right:0; z-index:12; display:none;
+    padding:10px 12px calc(10px + var(--safe-area-bottom));
+    backdrop-filter: blur(var(--blur)); background: rgba(10,10,12,.5); border-top:1px solid rgba(255,255,255,.1);
+  }
+  .bottom .tab-btn{ flex:1; justify-content:center; padding:10px 12px; font-size:.9rem }
+  .bottom .tab-btn span{ display:none } /* компактнее на телефоне */
+
+  /* Responsive */
+  @media (max-width: 820px){
+    header .container{ padding-bottom:10px }
+    nav.top{ display:none } /* сверху прячем */
+    nav.bottom{ display:flex; gap:10px }
+    main{ padding:16px 12px 100px }
+    .grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .btn{ width:100%; justify-content:center }
+    h1{font-size:1.35rem}
+  }
+  @media (max-width: 460px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  /* Visually hidden for a11y */
+  .visually-hidden{ position:absolute !important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); border:0; }
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<canvas class="dust" id="dust" aria-hidden="true"></canvas>
+
+<header role="banner">
+  <div class="container">
+    <div class="brand" aria-label="CSX приватный сервер">
+      <span class="dot" aria-hidden="true"></span>
+      <span>CSX — приватный сервер</span>
+    </div>
+
+    <!-- Desktop / tablet nav -->
+    <nav class="top" aria-label="Главная навигация (ПК/планшет)" role="tablist">
+      <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home">
+        <!-- home icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"></path><path d="M9 22V12h6v10"></path><path d="M3 10v11h6"></path><path d="M21 10v11h-6"></path></svg>
+        <span>Главная</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-download" data-tab="download">
+        <!-- download icon -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>
+        <span>Скачать CSX</span>
+      </button>
+      <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tg" data-tab="tg">
+        <!-- telegram icon (mono) -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"></path><path d="M8 13l4 3"></path></svg>
+        <span>Телеграмм разработчика</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<!-- Mobile bottom nav -->
+<nav class="bottom" aria-label="Главная навигация (мобильная)" role="tablist">
+  <button class="tab-btn" role="tab" aria-selected="true" aria-controls="tab-home" data-tab="home" aria-label="Главная">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9.5l9-7 9 7"></path><path d="M9 22V12h6v10"></path><path d="M3 10v11h6"></path><path d="M21 10v11h-6"></path></svg><span>Главная</span>
+  </button>
+  <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-download" data-tab="download" aria-label="Скачать CSX">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg><span>Скачать</span>
+  </button>
+  <button class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-tg" data-tab="tg" aria-label="Телеграмм">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"></path><path d="M8 13l4 3"></path></svg><span>Telegram</span>
+  </button>
+</nav>
+
+<main id="main" class="container" role="main">
+  <!-- HOME -->
+  <section id="tab-home" class="panel tab" role="tabpanel" aria-labelledby="Главная">
+    <h1>CSX — приватный сервер</h1>
+    <p class="lead">Минималистичный чёрно-белый сайт в стиле iOS с «стеклянными» панелями. Ниже — скриншоты проекта.</p>
+    <div class="cta-wrap" role="group" aria-label="Быстрые действия">
+      <a class="btn" href="./CSX/CSX.apk" download aria-label="Скачать APK CSX">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>
+        <span>Скачать APK</span>
+      </a>
+      <a class="btn monochrome" id="to-download" href="#download" aria-label="Перейти на вкладку Скачать CSX">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16"></path><path d="M12 4v16"></path></svg>
+        <span>К странице загрузки</span>
+      </a>
+    </div>
+
+    <div class="gallery" id="gallery-home" aria-live="polite" aria-busy="true">
+      <!-- сюда вставится сетка или карусель -->
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section id="tab-download" class="panel tab" hidden role="tabpanel" aria-labelledby="Скачать CSX">
+    <h1>Скачать CSX</h1>
+    <p class="lead">Нажмите, чтобы загрузить установочный файл APK. Поместите <code>index.html</code> в корень, а APK — в <code>/CSX/CSX.apk</code>.</p>
+    <div class="cta-wrap">
+      <a class="btn" href="./CSX/CSX.apk" download aria-label="Скачать APK CSX">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"></path><path d="M7 10l5 5 5-5"></path><path d="M5 21h14"></path></svg>
+        <span>Скачать CSX.apk</span>
+      </a>
+    </div>
+
+    <div class="gallery" id="gallery-download" aria-live="polite" aria-busy="true">
+      <!-- сюда вставится сетка или карусель -->
+    </div>
+  </section>
+
+  <!-- TELEGRAM -->
+  <section id="tab-tg" class="panel tab" hidden role="tabpanel" aria-labelledby="Телеграмм разработчика">
+    <h1>Телеграмм разработчика</h1>
+    <p class="lead">Связаться напрямую в Telegram.</p>
+    <div class="cta-wrap">
+      <!-- ЗАМЕНИТЕ username на свой -->
+      <a class="btn" href="tg://resolve?domain=username" aria-label="Открыть Telegram по протоколу tg">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"></path><path d="M8 13l4 3"></path></svg>
+        <span>Открыть в Telegram</span>
+      </a>
+      <a class="btn monochrome" href="https://t.me/username" target="_blank" rel="noopener"
+         aria-label="Открыть профиль Telegram в браузере">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 3L2 11l6 2 2 6 4-4 4 3 4-15z"></path><path d="M8 13l4 3"></path></svg>
+        <span>t.me/username</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer role="contentinfo">
+  <small>© <span id="year"></span> CSX. Чёрно-белый стеклянный интерфейс. Все права сохранены.</small>
+</footer>
+
+<script>
+/* ===== Year ===== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ===== Tabs (both navs are in sync) ===== */
+const tabs = ["home","download","tg"];
+const tabButtons = Array.from(document.querySelectorAll('[data-tab]'));
+const tabPanels = Object.fromEntries(tabs.map(id => [id, document.getElementById('tab-'+id)]));
+
+function setTab(id){
+  tabs.forEach(t=>{
+    const selected = (t===id);
+    tabPanels[t].hidden = !selected;
+    document.querySelectorAll(`[data-tab="${t}"]`).forEach(btn=>{
+      btn.setAttribute('aria-selected', String(selected));
+    });
+  });
+  history.replaceState(null, "", `#${id}`);
+}
+tabButtons.forEach(b=>b.addEventListener('click', ()=> setTab(b.dataset.tab)));
+document.getElementById('to-download').addEventListener('click', (e)=>{
+  e.preventDefault(); setTab('download'); scrollTo({top:0, behavior:'smooth'});
+});
+/* Deep link by hash */
+const bootTab = (location.hash || '#home').replace('#','');
+setTab(tabs.includes(bootTab)?bootTab:'home');
+
+/* ===== Sand dust background (canvas particles, subtle) ===== */
+(function initDust(){
+  const canvas = document.getElementById('dust');
+  const ctx = canvas.getContext('2d');
+  let w=canvas.width=window.innerWidth, h=canvas.height=window.innerHeight;
+  const count = Math.min(220, Math.floor((w*h)/18000)); // density scales with viewport
+  const parts = Array.from({length:count}, ()=> seed());
+  function seed(){
+    const speed = 0.05 + Math.random()*0.15;
+    const dir = Math.random()*Math.PI*2;
+    return {
+      x: Math.random()*w, y: Math.random()*h,
+      vx: Math.cos(dir)*speed, vy: Math.sin(dir)*speed,
+      r: Math.random()*1.4+0.4, a: Math.random()*0.35+0.05
+    };
+  }
+  function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+  window.addEventListener('resize', resize, {passive:true});
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    ctx.globalCompositeOperation='lighter';
+    for(const p of parts){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x<-10) p.x=w+10; if(p.x>w+10) p.x=-10;
+      if(p.y<-10) p.y=h+10; if(p.y>h+10) p.y=-10;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ===== Dynamic gallery loader =====
+   Attempts image/1.(png|jpg|jpeg|webp), image/2.* ... until:
+   - hits maxIndex OR
+   - meets 'missStreakLimit' consecutive misses.
+*/
+async function loadScreenshots({maxIndex=200, missStreakLimit=12, basePath='image'} = {}){
+  const exts = ['png','jpg','jpeg','webp'];
+  const results = [];
+  let missStreak = 0;
+
+  function attemptForIndex(i){
+    return new Promise(resolve=>{
+      let done=false; let imgEl=null; let extIdx=0;
+      function tryNext(){
+        if(done) return;
+        if(extIdx>=exts.length){ resolve(null); return; }
+        const src = `./${basePath}/${i}.${exts[extIdx++]}`;
+        const img = new Image();
+        img.decoding = 'async';
+        img.loading = 'lazy';
+        img.alt = `Скриншот ${i}`;
+        img.addEventListener('load', ()=>{ done=true; resolve({index:i, src}); });
+        img.addEventListener('error', tryNext, {once:true});
+        // preflight without attaching to DOM
+        img.src = src;
+        // keep reference so GC doesn't drop
+        imgEl = img;
+      }
+      tryNext();
+    });
+  }
+
+  for(let i=1;i<=maxIndex;i++){
+    const found = await attemptForIndex(i);
+    if(found){
+      results.push(found);
+      missStreak = 0;
+    } else {
+      missStreak++;
+      if(missStreak>=missStreakLimit) break;
+    }
+  }
+  return results;
+}
+
+/* ===== Renderers: grid or carousel ===== */
+function renderGrid(container, items){
+  container.innerHTML = '';
+  const grid = document.createElement('div');
+  grid.className = 'grid';
+  items.forEach((it, idx)=>{
+    const card = document.createElement('figure');
+    card.className = 'shot';
+    const img = document.createElement('img');
+    img.src = it.src; img.alt = `Скриншот ${idx+1}`;
+    img.setAttribute('loading','lazy'); img.setAttribute('decoding','async');
+    card.appendChild(img);
+    const cap = document.createElement('figcaption');
+    cap.className='visually-hidden';
+    cap.textContent = `Скриншот ${idx+1}`;
+    card.appendChild(cap);
+    grid.appendChild(card);
+  });
+  container.appendChild(grid);
+  container.setAttribute('aria-busy','false');
+}
+
+function renderCarousel(container, items){
+  container.innerHTML = '';
+  const car = document.createElement('div'); car.className='carousel'; car.setAttribute('role','region'); car.setAttribute('aria-label','Галерея (карусель)');
+  const track = document.createElement('div'); track.className='track'; car.appendChild(track);
+  items.forEach((it, idx)=>{
+    const slide = document.createElement('div'); slide.className='slide'; slide.setAttribute('role','group'); slide.setAttribute('aria-roledescription','slide'); slide.setAttribute('aria-label',`${idx+1} из ${items.length}`);
+    const fig = document.createElement('figure'); fig.className='shot';
+    const img = document.createElement('img'); img.src = it.src; img.alt = `Скриншот ${idx+1}`; img.loading='eager';
+    fig.appendChild(img); slide.appendChild(fig); track.appendChild(slide);
+  });
+  const left = document.createElement('button'); left.className='arrow left'; left.setAttribute('aria-label','Предыдущий'); left.innerHTML = `<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>`;
+  const right = document.createElement('button'); right.className='arrow right'; right.setAttribute('aria-label','Следующий'); right.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>`;
+  car.appendChild(left); car.appendChild(right);
+
+  let idx=0;
+  function update(){
+    track.style.transform = `translateX(${-idx*100}%)`;
+    left.toggleAttribute('disabled', idx<=0);
+    right.toggleAttribute('disabled', idx>=items.length-1);
+  }
+  left.addEventListener('click', ()=>{ if(idx>0){ idx--; update(); } });
+  right.addEventListener('click', ()=>{ if(idx<items.length-1){ idx++; update(); } });
+
+  // Swipe (touch)
+  let startX=0, curX=0, dragging=false;
+  const threshold = 40;
+  track.addEventListener('touchstart', (e)=>{ dragging=true; startX=e.touches[0].clientX; curX=startX; }, {passive:true});
+  track.addEventListener('touchmove', (e)=>{ if(!dragging) return; curX=e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend', ()=>{ if(!dragging) return; const dx = curX-startX; if(Math.abs(dx)>threshold){ if(dx<0 && idx<items.length-1) idx++; if(dx>0 && idx>0) idx--; } update(); dragging=false; });
+
+  container.appendChild(car);
+  container.setAttribute('aria-busy','false');
+  update();
+}
+
+/* ===== Boot galleries on two tabs ===== */
+(async function initGalleries(){
+  const imgs = await loadScreenshots(); // shared list
+  const home = document.getElementById('gallery-home');
+  const down = document.getElementById('gallery-download');
+
+  function mount(container){
+    if(imgs.length <= 6) renderGrid(container, imgs);
+    else renderCarousel(container, imgs);
+  }
+  mount(home); mount(down);
+
+  if(imgs.length===0){
+    [home, down].forEach(el=>{
+      el.setAttribute('aria-busy','false');
+      el.innerHTML = `<div class="panel" role="note" style="margin-top:8px">
+        Скриншоты не найдены. Добавьте файлы <code>/image/1.png</code>, <code>2.jpg</code>, …</div>`;
+    });
+  }
+})();
+
+/* ===== Keyboard a11y: arrow nav between tabs ===== */
+document.addEventListener('keydown', (e)=>{
+  if(!['ArrowLeft','ArrowRight'].includes(e.key)) return;
+  const current = tabs.findIndex(t=> document.querySelector(`[data-tab="${t}"]`).getAttribute('aria-selected')==='true');
+  if(current<0) return;
+  const dir = e.key==='ArrowRight' ? 1 : -1;
+  const next = (current + dir + tabs.length) % tabs.length;
+  setTab(tabs[next]);
+});
+</script>
+</body>
+</html>
